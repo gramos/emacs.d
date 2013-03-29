@@ -1,0 +1,10 @@
+/home/gramos/grid/apps/SMRTouch/config/deploy/new_production.rb
+/home/gramos/grid/apps/SMRTouch/config/deploy/#new_production.rb#
+/home/gramos/grid/apps/SMRTouch/config/deploy.rb
+/home/gramos/grid/apps/SMRTouch/config/#deploy.rb#
+/home/gramos/grid/apps/SMRTouch/config/templates/database.yml.erb
+/home/gramos/grid/apps/SMRTouch/config/templates/#database.yml.erb#
+/home/gramos/grid/apps/SMRTouch/config/deploy/capistrano_config_yml.rb
+/home/gramos/grid/apps/SMRTouch/config/deploy/#capistrano_config_yml.rb#
+/home/gramos/grid/apps/SMRTouch/config/deploy/production.rb
+/home/gramos/grid/apps/SMRTouch/config/deploy/#production.rb#

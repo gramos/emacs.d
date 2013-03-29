@@ -1,0 +1,12 @@
+/home/gramos/grid/conf/grid.yml
+/home/gramos/grid/conf/#grid.yml#
+/home/gramos/grid/tasks/setup.rake
+/home/gramos/grid/tasks/#setup.rake#
+/home/gramos/grid/lib/grid/app.rb
+/home/gramos/grid/lib/grid/#app.rb#
+/home/gramos/grid/conf/templates/mongrel.erb
+/home/gramos/grid/conf/templates/#mongrel.erb#
+/home/gramos/grid/lib/grid/config.rb
+/home/gramos/grid/lib/grid/#config.rb#
+/home/gramos/grid/Rakefile
+/home/gramos/grid/#Rakefile#

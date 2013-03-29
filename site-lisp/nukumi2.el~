@@ -1,0 +1,122 @@
+;;; nukumi2.el --- convenience functions for the Nukumi2 blogging system
+
+;; Copyright (C) 2004 Christian Neukirchen
+
+;; Author: Christian Neukirchen <chneukirchen@yahoo.de>
+;; Maintainer: Christian Neukirchen <chneukirchen@yahoo.de>
+;; Keywords: convenience
+;; Version: see `nukumi2-version'
+
+;; This file is *not* part of GNU Emacs.
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation; either version 2, or (at your option)
+;; any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with GNU Emacs; see the file COPYING.  If not, write to the
+;; Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+;; Boston, MA 02111-1307, USA.
+
+(defvar nukumi2-version "0.1" "Nukumi2 version information.")
+
+(defvar nukumi2-blogs
+  '(("nukumi2" "~/src/ruby/nukumi2-0.5.0/")
+;   ("nukumi2"     "~/projects/nukumi2" "nukumirc"    )
+    )
+  "A list of blogs known to nukumi2.el.\n
+Each element has the form (NAME DIRECTORY).")
+
+(defface nukumi2-field-face
+  '((t (:bold t :underline t :background "grey25")))
+  "Face to use for RFC822 header fields in nukumi2-mode."
+  :group 'font-lock-highlighting-faces)
+
+(defface nukumi2-value-face
+  '((t (:bold t :background "grey25")))
+  "Face to use for RFC822 header values in nukumi2-mode."
+  :group 'font-lock-highlighting-faces)
+
+(defface nukumi2-leading-space-face
+  '((t (:background "grey40")))
+  "Face to use for leading space in nukumi2-mode."
+  :group 'font-lock-highlighting-faces)
+
+(defface nukumi2-trailing-space-face
+  '((t (:background "grey40")))
+  "Face to use for trailing space in nukumi2-mode."
+  :group 'font-lock-highlighting-faces)
+
+(defun nukumi2-get-blog ()
+  "Ask for a valid blog name."
+  (completing-read "Blog: "
+                    (mapcar (lambda (x) (list (car x) (car x))) nukumi2-blogs)
+                    nil nil (caar nukumi2-blogs)))
+
+(defun nukumi2-update-blog (blog)
+  "Update the blog."
+  (interactive (list (nukumi2-get-blog)))
+  (let ((directory (cadr (assoc blog nukumi2-blogs))))
+    (if directory
+        (compile (concat "cd " directory " ; nukumi2"))
+      (error "No such blog: %s" blog))))
+
+(defun nukumi2-upload-blog (blog)
+  "Upload the blog."
+  (interactive (list (nukumi2-get-blog)))
+  (let ((directory (cadr (assoc blog nukumi2-blogs))))
+    (if directory
+        (compile (concat "cd " directory " ; nukumi2 && upload-nukumi"))
+      (error "No such blog: %s" blog))))
+
+(defun nukumi2-insert-now-playing ()
+  "Insert a ``now playing''-line of the current XMMS song."
+  (interactive)
+  (insert (shell-command-to-string
+           (concat "grep ^Title: /tmp/xmms-info_`whoami`.0 | "
+                   "sed 's/^Title: /NP: /;s/ *- */---/'"))))
+
+(defun nukumi2-new-blog-entry ()
+  "Start a new blog entry.\n
+Call this function inside an empty buffer."
+  (interactive)
+  (goto-char (point-min))
+  (insert "Title: \n"
+          "Date: " (format-time-string "%a, %_d %b %Y %H:%M:%S %z" (current-time))
+          "\nCategory: \n\n")
+  (nukumi2-insert-now-playing)
+  (goto-char (point-min))
+  (end-of-line)
+  (nukumi2-mode))
+
+(define-derived-mode nukumi2-mode
+  text-mode "Nukumi2"
+  "Major mode for editing Nukumi2 weblog entries."
+  (make-local-variable 'font-lock-defaults)
+  (setq font-lock-defaults
+        '((("^\\([A-Z][A-Za-z0-9_]*:\\)\\(.*\n\\)"
+            (1 'nukumi2-field-face)
+            (2 'nukumi2-value-face))
+           ("^\t" . 'nukumi2-leading-space-face)
+           ("^    " . 'nukumi2-leading-space-face)
+           ("  $" . 'nukumi2-trailing-space-face)
+           )
+          t t)
+  )
+  (font-lock-mode 1)
+  (set-buffer-file-coding-system 'utf-8))
+
+(define-key nukumi2-mode-map (kbd "C-c C-c") 'nukumi2-update-blog)
+(define-key nukumi2-mode-map (kbd "C-c C-u") 'nukumi2-upload-blog)
+
+(global-set-key (kbd "C-x N") 'nukumi2-new-blog-entry)
+
+(provide 'nukumi2)
+
+;;; nukumi2.el ends here
