@@ -2,17 +2,11 @@
 
 ;; Ecb downloaded from: https://github.com/alexott/ecb
 ;; because the debian package does not work with emacs24
-
 (add-to-list 'load-path "~/.emacs.d/site-lisp/ecb")
 (load-file "~/.emacs.d/site-lisp/ecb/ecb.el")
 
 (add-to-list 'load-path "~/.emacs.d/site-lisp/rspec-mode")
 (require 'rspec-mode)
-
-;(add-to-list 'load-path (expand-file-name "~/.emacs.d/site-lisp"))
-
-;(add-to-list 'load-path (expand-file-name "~/.emacs.d/site-lisp/rails-minor-mode"))
-;(require 'rails)
 
 (add-to-list 'load-path "~/.emacs.d/site-lisp/color-theme")
 
@@ -25,45 +19,10 @@
                               'color-theme-sitaramv-nt 'color-theme-wheat))
 
 
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(case-fold-search t)
- '(column-number-mode t)
- '(display-battery-mode t)
- '(display-time-mode t)
- '(global-font-lock-mode t nil (font-lock))
- '(load-home-init-file t t)
- '(set-terminal-coding-system "utf-8"))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(diff-added-face ((t (:foreground "green"))))
- '(diff-changed-face ((t (:foreground "yellow"))))
- '(diff-header-face ((t (:foreground "cyan"))))
- '(diff-hunk-header-face ((t (:foreground "magenta"))))
- '(diff-removed-face ((t (:foreground "red"))))
- '(flymake-errline ((((class color)) (:background "LightPink" :foreground "black"))))
- '(flymake-warnline ((((class color)) (:background "LightBlue2" :foreground "black"))))
- '(font-lock-builtin-face ((t (:foreground "deepskyblue"))))
- '(font-lock-comment-face ((t (:foreground "gray60"))))
- '(font-lock-doc-face ((t (:foreground "darkkhaki"))))
- '(font-lock-function-name-face ((t (:foreground "green" :background "black"))))
- '(font-lock-keyword-face ((t (:background "blue" :foreground "white"))))
- '(font-lock-string-face ((t (:foreground "white"))))
- '(font-lock-type-face ((t (:background "cyan" :foreground "black"))))
- '(font-lock-variable-name-face ((t (:foreground "yellow"))))
- '(highlight ((t (:foreground "black" :background "darkseagreen2"))))
- '(region ((t (:background "sienna")))))
-
-
-
 ;(set-default-font "-adobe-avant garde gothic-*-*-*-*-*-*-*-*-*-*-*-*")
+
 (set-default-font "terminus-14")
+
 ;(set-default-font "monospace-11")
 
 ;; Uso espacios en vez de tabs
@@ -95,24 +54,25 @@
 (set-background-color "black")
 (set-foreground-color "grey")
 
-; (setq c-default-style
-;        '((php-mode . "php") ))
-
-;; Agregamos el soporte para subversion
+;; https://github.com/zenspider/enhanced-ruby-mode
 ;;
-;; (require 'vc-svn)
+(add-to-list 'load-path "~/.emacs.d/site-lisp/Enhanced-Ruby-Mode") ; must be added after any path containing old ruby-mode
+(autoload 'enh-ruby-mode "enh-ruby-mode" "Major mode for ruby files" t)
+(add-to-list 'auto-mode-alist '("\\.rb$" . enh-ruby-mode))
+(add-to-list 'interpreter-mode-alist '("ruby" . enh-ruby-mode))
 
-(autoload 'ruby-mode "ruby-mode" "Ruby editing mode." t)
-(setq auto-mode-alist  (cons '("\\.rb$" . ruby-mode) auto-mode-alist))
-(setq auto-mode-alist  (cons '("Rakefile$" . ruby-mode) auto-mode-alist))
-(setq auto-mode-alist  (cons '("rakefile$" . ruby-mode) auto-mode-alist))
-(setq auto-mode-alist  (cons '("\\.rake$" . ruby-mode) auto-mode-alist))
-(setq auto-mode-alist  (cons '("\\.gemspec$" . ruby-mode) auto-mode-alist))
+(setq auto-mode-alist  (cons '("Rakefile$" . enh-ruby-mode) auto-mode-alist))
+(setq auto-mode-alist  (cons '("rakefile$" . enh-ruby-mode) auto-mode-alist))
+(setq auto-mode-alist  (cons '("\\.rake$" . enh-ruby-mode) auto-mode-alist))
+(setq auto-mode-alist  (cons '("\\.gemspec$" . enh-ruby-mode) auto-mode-alist))
 (setq auto-mode-alist  (cons '("\\.rhtml$" . html-mode) auto-mode-alist))
-(setq auto-mode-alist  (cons '("Gemfile$" . ruby-mode) auto-mode-alist))
+(setq auto-mode-alist  (cons '("Gemfile$" . enh-ruby-mode) auto-mode-alist))
 (setq auto-mode-alist  (cons '("\\.md$" . markdown-mode) auto-mode-alist))
 (setq auto-mode-alist  (cons '("\\.haml$" . haml-mode) auto-mode-alist))
 (setq auto-mode-alist  (cons '("packaging$" . sh-mode) auto-mode-alist))
+
+;; (autoload 'ruby-mode "ruby-mode" "Ruby editing mode." t)
+;; (setq auto-mode-alist  (cons '("\\.rb$" . ruby-mode) auto-mode-alist))
 
 ; Activo el sql-mode para los archivos .psql
 (setq auto-mode-alist  (cons '("\\.psql$" . sql-mode) auto-mode-alist))
@@ -122,30 +82,7 @@
 (set-background-color "#000000")
 (set-cursor-color "#ff0000")
 
-
-(if (> (display-color-cells) 20)
-    (custom-set-faces
-     '(font-lock-builtin-face ((t (:foreground "deepskyblue"))))
-     '(font-lock-comment-face ((t (:foreground "gray60"))))
-     '(font-lock-doc-face ((t (:foreground "darkkhaki"))))
-     '(font-lock-keyword-face ((t (:foreground "magenta"))))
-     '(font-lock-function-name-face ((t (:foreground "green" :background "black"))))
-;     '(font-lock-string-face ((t (:foreground "gold"))))
-     '(font-lock-type-face ((t (:foreground "cyan" :background "slateblue"))))
-     '(font-lock-variable-name-face ((t (:foreground "yellow"))))
-
-     '(region ((t (:background "sienna"))))
-     '(highlight ((t (:foreground "black" :background "darkseagreen2"))))
-
-     '(diff-added-face ((t (:foreground "green"))))
-     '(diff-changed-face ((t (:foreground "yellow"))))
-     '(diff-header-face ((t (:foreground "cyan"))))
-     '(diff-hunk-header-face ((t (:foreground "magenta"))))
-     '(diff-removed-face ((t (:foreground "red")))))
-)
-
-
-;;;;;;;;;
+;;;;;;;;;;;;
 ;;;; KEYS
 ;;;;;;;;;;;;
 ;;;
