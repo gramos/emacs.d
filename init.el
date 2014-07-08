@@ -1,5 +1,11 @@
 ;; -*- coding:utf-8 mode: emacs-lisp -*-
 
+;; Ecb downloaded from: https://github.com/alexott/ecb
+;; because the debian package does not work with emacs24
+
+(add-to-list 'load-path "~/.emacs.d/site-lisp/ecb")
+(load-file "~/.emacs.d/site-lisp/ecb/ecb.el")
+
 (add-to-list 'load-path "~/.emacs.d/site-lisp/rspec-mode")
 (require 'rspec-mode)
 
@@ -36,7 +42,6 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
-
  '(diff-added-face ((t (:foreground "green"))))
  '(diff-changed-face ((t (:foreground "yellow"))))
  '(diff-header-face ((t (:foreground "cyan"))))
