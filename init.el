@@ -2,21 +2,41 @@
 
 ;; Ecb downloaded from: https://github.com/alexott/ecb
 ;; because the debian package does not work with emacs24
-(add-to-list 'load-path "~/.emacs.d/site-lisp/ecb")
-(load-file "~/.emacs.d/site-lisp/ecb/ecb.el")
+;(add-to-list 'load-path "~/.emacs.d/site-lisp/ecb")
+;(load-file "~/.emacs.d/site-lisp/ecb/ecb.el")
+
+(when (>= emacs-major-version 24)
+  (require 'package)
+  (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
+  (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
+  (add-to-list 'package-archives '("elpa" . "http://elpa.gnu.org/ ") t)
+  (package-initialize) )
+
+
+(require 'auto-complete)
+(global-auto-complete-mode t)
+
+;;; rhtml mode
+(add-to-list 'load-path "~/.emacs.d/site-lisp/rhtml")
+(require 'rhtml-mode)
+
+(add-to-list 'load-path "~/.emacs.d/site-lisp/expand-region.el")
+(require 'expand-region)
+(global-set-key (kbd "C-^") 'er/expand-region)
 
 (add-to-list 'load-path "~/.emacs.d/site-lisp/rspec-mode")
 (require 'rspec-mode)
 
 (add-to-list 'load-path "~/.emacs.d/site-lisp/color-theme")
 
- (require 'color-theme)
- (setq my-color-themes (list 'color-theme-billw 'color-theme-jsc-dark 
-                              'color-theme-sitaramv-solaris 'color-theme-resolve
-                              'color-theme-classic 'color-theme-jonadabian-slate
-                              'color-theme-kingsajz 'color-theme-shaman
-                              'color-theme-subtle-blue 'color-theme-snowish
-                              'color-theme-sitaramv-nt 'color-theme-wheat))
+
+(require 'color-theme)
+(setq my-color-themes (list 'color-theme-billw 'color-theme-jsc-dark
+                            'color-theme-sitaramv-solaris 'color-theme-resolve
+                            'color-theme-classic 'color-theme-jonadabian-slate
+                            'color-theme-kingsajz 'color-theme-shaman
+                            'color-theme-subtle-blue 'color-theme-snowish
+                            'color-theme-sitaramv-nt 'color-theme-wheat))
 
 
 ;(set-default-font "-adobe-avant garde gothic-*-*-*-*-*-*-*-*-*-*-*-*")
@@ -54,18 +74,15 @@
 (set-background-color "black")
 (set-foreground-color "grey")
 
-;; https://github.com/zenspider/enhanced-ruby-mode
-;;
-(add-to-list 'load-path "~/.emacs.d/site-lisp/Enhanced-Ruby-Mode") ; must be added after any path containing old ruby-mode
-(autoload 'enh-ruby-mode "enh-ruby-mode" "Major mode for ruby files" t)
-(add-to-list 'auto-mode-alist '("\\.rb$" . enh-ruby-mode))
-(add-to-list 'interpreter-mode-alist '("ruby" . enh-ruby-mode))
+;; Muestro la hora
+(display-time-mode 1)
 
 (setq auto-mode-alist  (cons '("Rakefile$" . enh-ruby-mode) auto-mode-alist))
 (setq auto-mode-alist  (cons '("rakefile$" . enh-ruby-mode) auto-mode-alist))
 (setq auto-mode-alist  (cons '("\\.rake$" . enh-ruby-mode) auto-mode-alist))
 (setq auto-mode-alist  (cons '("\\.gemspec$" . enh-ruby-mode) auto-mode-alist))
-(setq auto-mode-alist  (cons '("\\.rhtml$" . html-mode) auto-mode-alist))
+(setq auto-mode-alist  (cons '("\\.rhtml$" . rhtml-mode) auto-mode-alist))
+(setq auto-mode-alist  (cons '("\\.erb$" . rhtml-mode) auto-mode-alist))
 (setq auto-mode-alist  (cons '("Gemfile$" . enh-ruby-mode) auto-mode-alist))
 (setq auto-mode-alist  (cons '("\\.md$" . markdown-mode) auto-mode-alist))
 (setq auto-mode-alist  (cons '("\\.haml$" . haml-mode) auto-mode-alist))
@@ -101,27 +118,8 @@
 ;;(global-set-key [S-f9] 'pry-intercept)
 ;;(global-set-key [f9] 'pry-intercept-rerun)
 
-;; When show-paren-mode is enabled a matching parenthesis is highlighted based on the location of point 
+;; When show-paren-mode is enabled a matching parenthesis is highlighted based on the location of point
 (show-paren-mode t)
-
-;; Emacs autocomplete
-(global-set-key [(tab)] 'smart-tab)
-(defun smart-tab ()
-  "This smart tab is minibuffer compliant: it acts as usual in
-    the minibuffer. Else, if mark is active, indents region. Else if
-    point is at the end of a symbol, expands it. Else indents the
-    current line."
-  (interactive)
-  (if (minibufferp)
-      (unless (minibuffer-complete)
-        (dabbrev-expand nil))
-    (if mark-active
-        (indent-region (region-beginning)
-                       (region-end))
-      (if (looking-at "\\_>")
-          (dabbrev-expand nil)
-        (indent-for-tab-command)))))
-
 
 ;; Macros copadas para ruby
 (fset 'ruby-insert-debugger
@@ -147,7 +145,7 @@
 (global-set-key (kbd "C-c r c") 'ruby-insert-class)
 
 (fset 'ruby-insert-test
-   [?t ?e ?s ?t ?  ?\' ?\' ?  ?d ?o ?  return return ?e ?n ?d up up right right right])
+   [?t ?e ?s ?t ?  ?\' ?\' ?  ?d ?o return return ?e ?n ?d up up right right right])
 (global-set-key (kbd "C-c r t") 'ruby-insert-test)
 
 (fset 'ruby-run-tests
@@ -164,6 +162,10 @@
    [?\C-x ?\C-f backspace backspace ?/ ?h ?o ?m ?e tab ?g ?r ?a ?m ?o ?s ?/ ?s ?r ?c ?/ ?a ?l ?t tab ?c ?f ?- tab ?s ?t tab])
 (global-set-key (kbd "C-c o w") 'open-wip)
 
+(global-set-key (kbd "C-c x") 'whitespace-cleanup)
 
+(put 'upcase-region 'disabled nil)
 
-
+;; show trailing whitespaces and tabs
+(show-ws-toggle-show-trailing-whitespace)
+(show-ws-toggle-show-tabs)
